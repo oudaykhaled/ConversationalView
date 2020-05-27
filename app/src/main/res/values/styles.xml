@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <declare-styleable name="TwoButtonsView">
+        <attr name="backgroundColorNotSelected" format="color"/>
+        <attr name="backgroundColorSelected" format="color"/>
+        <attr name="textColorNotSelected" format="reference"/>
+        <attr name="textColorSelected" format="reference"/>
+        <attr name="textOption1" format="string"/>
+        <attr name="textOption2" format="string"/>
+        <attr name="textOption1Drawable" format="reference" />
+        <attr name="textOption2Drawable" format="reference" />
+        <attr name="selectedOption">
+            <enum name="none" value="0" />
+            <enum name="option1" value="1" />
+            <enum name="option2" value="2" />
+        </attr>
+    </declare-styleable>
+
+</resources>

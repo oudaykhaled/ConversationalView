@@ -1,0 +1,4 @@
+rootProject.name='ConversationalView'
+include ':app'
+include ':conversational'
+include ':conversationalui'
