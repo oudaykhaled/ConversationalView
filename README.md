@@ -2,7 +2,7 @@ Soon it will be published to artifactory
 
 # Android Conversational View
 
-It's a library that help you building and managing custom conversational view. All what is needed is to build the steps and the graph. conversational view will manage showing the steps, validating the steps and and editing the steps.
+It's a library that help you build and manage custom conversational view. All what is needed is to build the steps and the graph. conversational view will manage showing the steps, validating the steps and and editing the steps.
 
 # How It Works
 
