@@ -39,26 +39,47 @@ class ConversationalManager<DataModelType>(
 
     override fun notifyManagerAtStep(interchangeableStepViewBinder: InterchangeableStepViewBinder<DataModelType>?) {
         var levelIndex: Int? = 0
+        var firstValidStep: Step<DataModelType>? = null
         interchangeableStepViewBinder?.let { it ->
 
-            it.step?.let { step ->
-                val whereAmI = it.step?.whereAmI
+            it.getStep()?.let { step ->
+                val whereAmI = it.getStep()?.whereAmI
                 if (whereAmI is WhereAmI.LastStep) {
                     if (whereAmI.checkIfReady?.invoke() == LastStepReadiness.READY) {
-                        uiContact.onConversationProgressUpdate(it.step!!, percentage = 100, isDone = true)
+                        uiContact.onConversationProgressUpdate(
+                            step,
+                            percentage = 100,
+                            isDone = true
+                        )
                     } else {
-                        uiContact.onConversationProgressUpdate(it.step!!, percentage = 100)
+                        uiContact.onConversationProgressUpdate(
+                            step,
+                            percentage = computePercentage(step)
+                        )
                     }
                     return
                 }
             }
 
-            levelIndex = flow.findStepLevel(it)!!
+            levelIndex = flow.findStepLevel(it)
             levelIndex?.let { index -> levelIndex = index + 1 }
         }
-        val firstValidStep = levelIndex?.let { findFirstValidStepAtLevel(it) }
-        if (firstValidStep == null) println("No valid step")
-        uiContact.onConversationProgressUpdate(firstValidStep!!, percentage = computePercentage(firstValidStep))
+        firstValidStep = levelIndex?.let { findFirstValidStepAtLevel(it) }
+        if (firstValidStep == null) {
+            println("No valid step")
+            if (steps.last != interchangeableStepViewBinder){
+                //Clear/Remove non-eligiable steps
+                removeNonEliigiableSteps(steps)
+                //Notify the ui
+                levelIndex?.let { uiContact.setData(it, LinkedList<Step<DataModelType>>(), steps) }!!
+                uiContact.onConversationProgressUpdate(interchangeableStepViewBinder!!.getStep()!!, percentage = computePercentage(interchangeableStepViewBinder!!.getStep()!!))
+            }
+            return
+        }
+        uiContact.onConversationProgressUpdate(
+            firstValidStep!!,
+            percentage = computePercentage(firstValidStep)
+        )
         firstValidStep?.let { step ->
             if (interchangeableStepViewBinder?.hasSummaryState() == true) {
                 interchangeableStepViewBinder?.let { switchToSummaryState(it) }
@@ -68,28 +89,54 @@ class ConversationalManager<DataModelType>(
             steps.add(step)
             val stepsUpdated = LinkedList<Step<DataModelType>>()
             stepsUpdated.add(step)
+
+
+            //Clear/Remove non-eligiable steps
+            removeNonEliigiableSteps(stepsUpdated)
+
+
             //Notify the ui
             levelIndex?.let { uiContact.setData(it, stepsUpdated, steps) }!!
+            uiContact.onConversationProgressUpdate(step, percentage = computePercentage(step))
         }
+
+        //If there is a valid step pending,
+        //Notify UI
+        firstValidStep?.let {
+            notifyManagerAtStep(firstValidStep.interchangeableStepViewBinder)
+        }
+
+    }
+
+    private fun removeNonEliigiableSteps(stepsUpdated: LinkedList<Step<DataModelType>>) {
+        val level = flow.findStepLevel(stepsUpdated.last)
+        val lstToRemove = LinkedList<Step<DataModelType>>()
+        steps.forEach {
+            if (flow.findStepLevel(it) > level) {
+                lstToRemove.add(it)
+                it.stepRequirementValidator.clear()
+            }
+        }
+        steps.removeAll(lstToRemove)
     }
 
     fun computePercentage(step: Step<DataModelType>): Int {
         return (
-            (flow.findStepLevel(step).toDouble() / flow.getLevelsCount().toDouble())
-                * 100.toDouble())
+                (flow.findStepLevel(step).toDouble() / flow.getLevelsCount().toDouble())
+                        * 100.toDouble())
             .roundToInt()
     }
 
     override fun switchToInitialState(interchangeableStepViewBinder: InterchangeableStepViewBinder<DataModelType>) {
         interchangeableStepViewBinder.getStep()?.status = StepStatus.INITIAL_STATE
         val levelIndex = flow.findStepLevel(interchangeableStepViewBinder)
-        levelIndex?.let { uiContact.switchToInitialState(it) }
+        levelIndex.let { uiContact.switchToInitialState(it) }
     }
 
     override fun switchToSummaryState(interchangeableStepViewBinder: InterchangeableStepViewBinder<DataModelType>) {
         interchangeableStepViewBinder.getStep()?.status = StepStatus.SUMMARY_STATUS
         val levelIndex = flow.findStepLevel(interchangeableStepViewBinder)
-        levelIndex?.let { uiContact.switchToSummaryState(it) }
+        levelIndex.let { uiContact.switchToSummaryState(it) }
     }
 
 

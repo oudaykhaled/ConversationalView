@@ -41,7 +41,9 @@ class StepViewBinderMap<DataModelType> {
     @Synchronized
     fun setViewBinders(startFrom: Int, stepsUpdated: LinkedList<InterchangeableStepViewBinder<DataModelType>>) {
         var counter = 1L
-        var lstToRemove = LinkedList(lstBinders.subList(startFrom, lstBinders.size))
+
+        var lstToRemove: LinkedList<InterchangeableStepViewBinder<DataModelType>> =
+            LinkedList(lstBinders.subList(startFrom, lstBinders.size))
 
         lstToRemove.forEach {
             mapViewBinders.remove(mapItemIds[it])
@@ -64,6 +66,11 @@ class StepViewBinderMap<DataModelType> {
     class ViewTypeCounter {
 
         private var viewTypeCounter = 1L
+
+        @Synchronized
+        fun increment() {
+            viewTypeCounter++
+        }
 
         @Synchronized
         fun incrementBy(num: Long) {

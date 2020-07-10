@@ -40,7 +40,7 @@ class ConversationFlow<DataModelType>(
     fun getStepsAtLevel(levelIndex: Int) = flow[levelIndex]
 
     fun findStepLevel(interchangeableStepViewBinder: InterchangeableStepViewBinder<DataModelType>): Int {
-        interchangeableStepViewBinder.step?.let { return findStepLevel(it) }
+        interchangeableStepViewBinder.getStep()?.let { return findStepLevel(it) }
         return 0
     }
 
@@ -49,3 +49,4 @@ class ConversationFlow<DataModelType>(
         return 0
     }
 }
+

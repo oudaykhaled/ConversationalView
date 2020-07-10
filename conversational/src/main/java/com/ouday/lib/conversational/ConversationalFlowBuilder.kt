@@ -20,7 +20,7 @@ class ConversationalFlowBuilder<DataModelType> {
         flow.forEach { level ->
             level.forEach { step ->
                 step.dataModel = dataModel
-                step.interchangeableStepViewBinder.step = step
+                step.interchangeableStepViewBinder.setStep(step)
             }
         }
         return ConversationFlow(flow)

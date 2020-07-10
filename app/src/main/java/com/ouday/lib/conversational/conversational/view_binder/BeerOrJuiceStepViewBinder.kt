@@ -46,4 +46,10 @@ class BeerOrJuiceStepViewBinder : InterchangeableStepViewBinder<OrderDataModel>(
         }
     }
 
+    override fun onUnBindInitialState(dataModel: OrderDataModel, itemView: View) {
+    }
+
+    override fun onUnBindSummaryState(dataModel: OrderDataModel, itemView: View) {
+    }
+
 }

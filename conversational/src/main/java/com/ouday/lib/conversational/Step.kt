@@ -18,14 +18,14 @@ class Step<DataModelType>(
             return _dataModel
         }
         internal set(value){
-        _dataModel = value
-        stepRequirementValidator.dataModel = value
-    }
+            _dataModel = value
+            stepRequirementValidator.dataModel = value
+        }
 
     private var _status: StepStatus? = null
     var status: StepStatus?
-    set(value) {_status = value}
-    get() = _status
+        set(value) {_status = value}
+        get() = _status
 
 }
 
@@ -36,6 +36,5 @@ sealed class WhereAmI(val checkIfReady: (() -> LastStepReadiness)? = null) {
     object NotLastStep: WhereAmI()
     class  LastStep(checkIfReady: () -> LastStepReadiness): WhereAmI(checkIfReady)
 }
-
 
 

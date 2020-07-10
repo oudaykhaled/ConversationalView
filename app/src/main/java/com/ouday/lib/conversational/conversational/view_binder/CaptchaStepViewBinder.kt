@@ -59,5 +59,8 @@ class CaptchaStepViewBinder : InterchangeableStepViewBinder<OrderDataModel>() {
         compositeDisposable = CompositeDisposable()
     }
 
+    override fun onUnBindSummaryState(dataModel: OrderDataModel, itemView: View) {
+    }
+
 
 }

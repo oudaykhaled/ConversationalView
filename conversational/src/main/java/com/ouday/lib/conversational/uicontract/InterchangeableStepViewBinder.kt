@@ -19,7 +19,7 @@ abstract class InterchangeableStepViewBinder<DataModelType> {
     var state = ViewState.INITIAL_STATE
     lateinit var conversationManagerNotifier: ConversationManagerNotifier<DataModelType>
 
-    internal var step : Step<DataModelType>? = null
+    private var step : Step<DataModelType>? = null
 
 
     /**
@@ -28,6 +28,14 @@ abstract class InterchangeableStepViewBinder<DataModelType> {
      */
     fun getStep(): Step<DataModelType>? {
         return step
+    }
+
+    /**
+     * Retrieve the parent object (Enclosing Step)
+     * @see Step
+     */
+    fun setStep(step: Step<DataModelType>?) {
+        this.step = step
     }
 
     /**
@@ -79,9 +87,9 @@ abstract class InterchangeableStepViewBinder<DataModelType> {
      */
     abstract fun onBindViewForSummaryState(dataModel: DataModelType, itemView: View)
 
-    open fun onUnBindInitialState(dataModel: DataModelType, itemView: View){}
+    abstract fun onUnBindInitialState(dataModel: DataModelType, itemView: View)
 
-    open fun onUnBindSummaryState(dataModel: DataModelType, itemView: View){}
+    abstract fun onUnBindSummaryState(dataModel: DataModelType, itemView: View)
 
 
 }
